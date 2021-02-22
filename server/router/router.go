@@ -1,20 +1,10 @@
 package router
 
 import (
-	"github.com/gorilla/mux"
-	// "../middleware"
-)
-
-// Router is exported and used in main.go
-// func Router() *mux.Router {
-apackage router
-
-import (
 	"github.com/abdennour/go-to-do-app/middleware"
 	"github.com/gorilla/mux"
 )
 
-// Router - is exported and used in main.go
 func Router() *mux.Router {
 
 	router := mux.NewRouter()

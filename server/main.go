@@ -3,7 +3,8 @@ import (
     "fmt"
     "log"
     "net/http"
-    "./router"
+	
+	"github.com/abdennour/go-to-do-app/router"
 )
 func main() {
     r := router.Router()
