@@ -13,8 +13,6 @@ services:
     - .env
     volumes:
     - env-js:/opt/app/config:ro
-    image: abdennour/go-to-do-frontend:rc
-  # in k8s, it will be easier using sidecar with emptyDir vol
   frontend-sidecar-env-gen:
     image: abdennour/dotenv-to-js-object:4ea
     working_dir: /data
@@ -44,7 +42,6 @@ services:
     environment:
       DB_CONNECTION: mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}:27017/${DB_NAME}
       DB_NAME: ${DB_NAME}
-    image: abdennour/go-to-do-api:rc
   db:
     image: bitnami/mongodb:${DB_IMAGE_TAG}
     volumes:
@@ -54,7 +51,6 @@ services:
       MONGODB_DATABASE: ${DB_NAME}
       MONGODB_USERNAME: ${DB_USER}
       MONGODB_PASSWORD: ${DB_PASS}
-
 volumes:
   db-data:
   env-js:
