@@ -1,4 +1,4 @@
-package middleware 
+package middleware
 
 import (
 	"context"
@@ -6,29 +6,34 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"../models"
+	"os"
+
+	"github.com/abdennour/go-to-do-app/models"
 	"github.com/gorilla/mux"
 
-	// Mongodb
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// connectionString for MongoDB
-const connectionString = "Connection String"
+// DB connection string
+// const connectionString = "mongodb://localhost:27017/dbname"
+var connectionString = os.Getenv("DB_CONNECTION")
 
-// Name of the Database
-const dbName = "test"
+// Database Name
+var dbName = os.Getenv("DB_NAME")
 
-// Name of the collection
-const collectionName = "todolist"
+// Collection name
+const collName = "todolist"
 
-// collection object
+// collection object/instance
 var collection *mongo.Collection
 
-func connect(){
+// create connection with mongo db
+func init() {
+
+	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
 
 	// connect to MongoDB
@@ -45,33 +50,35 @@ func connect(){
 		log.Fatal(err)
 	}
 
-	fmt.Println("MongoDB coonnected!")
+	fmt.Println("Connected to MongoDB!")
 
 	collection = client.Database(dbName).Collection(collName)
 
 	fmt.Println("Collection instance created!")
 }
 
+// GetAllTask get all the task route
 func GetAllTask(w http.ResponseWriter, r *http.Request) {
-	// Setting header
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	payload := getAllTask()
 	json.NewEncoder(w).Encode(payload)
 }
 
+// CreateTask create task route
 func CreateTask(w http.ResponseWriter, r *http.Request) {
-	// Setting header
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	var task models.ToDoList
 	_ = json.NewDecoder(r.Body).Decode(&task)
+	// fmt.Println(task, r.Body)
 	insertOneTask(task)
 	json.NewEncoder(w).Encode(task)
 }
 
+// TaskComplete update task route
 func TaskComplete(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
@@ -84,7 +91,7 @@ func TaskComplete(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(params["id"])
 }
 
-
+// UndoTask undo the complete task route
 func UndoTask(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
@@ -97,6 +104,7 @@ func UndoTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(params["id"])
 }
 
+// DeleteTask delete one task route
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -117,6 +125,11 @@ func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(count)
 	// json.NewEncoder(w).Encode("Task not found")
 
+}
+
+// GetHealth of the app - useful for probes
+func GetHealth(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
 
 // get all task from the DB and return it
