@@ -13,6 +13,7 @@ services:
     - .env
     volumes:
     - env-js:/opt/app/config:ro
+    image: felzek/todolist-client:latest
   frontend-sidecar-env-gen:
     image: abdennour/dotenv-to-js-object:4ea
     working_dir: /data
@@ -42,6 +43,7 @@ services:
     environment:
       DB_CONNECTION: mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}:27017/${DB_NAME}
       DB_NAME: ${DB_NAME}
+    image: felzek/todolist-api:latest
   db:
     image: bitnami/mongodb:${DB_IMAGE_TAG}
     volumes:
