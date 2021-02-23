@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/abdennour/go-to-do-app/middleware"
+	"github.com/felzek/Go-todolist/middleware"
 	"github.com/gorilla/mux"
 )
 
