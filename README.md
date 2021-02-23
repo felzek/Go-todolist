@@ -2,7 +2,7 @@
 
 # Go To Do App
 
-*Make sure you have both Docker and Docker installed before hand
+Make sure you have both Docker and Docker installed before hand
 
 # Getting Started
 
