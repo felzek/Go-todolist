@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/abdennour/go-to-do-app/models"
+	"github.com/felzek/Go-todolist/models"
 	"github.com/gorilla/mux"
 
 	"go.mongodb.org/mongo-driver/bson"
